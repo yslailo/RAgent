@@ -1,5 +1,5 @@
 server:
-  port: 9090
+  port: 8081
   servlet:
     context-path: /api/ragent
 
@@ -15,9 +15,9 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    username: postgres
-    password: postgres
-    url: jdbc:postgresql://127.0.0.1:5432/ragent?client_encoding=UTF8
+    username: root
+    password: 123456
+    url: jdbc:postgresql://127.0.0.1:5432/ragent
     hikari:
       connection-timeout: 5000
       idle-timeout: 600000
@@ -110,6 +110,7 @@ ai:
       endpoints:
         chat: /compatible-mode/v1/chat/completions
         rerank: /api/v1/services/rerank/text-rerank/text-rerank
+        embedding: /compatible-mode/v1/embeddings
     siliconflow:
       url: https://api.siliconflow.cn
       api-key: ${SILICONFLOW_API_KEY:}
@@ -148,18 +149,23 @@ ai:
         priority: 2
 
   embedding:
-    default-model: qwen-emb-8b
+    default-model: text-embedding-v3
     candidates:
+      - id: text-embedding-v3
+        provider: bailian
+        model: text-embedding-v3
+        dimension: 1024
+        priority: 1
       - id: qwen-emb-8b
         provider: siliconflow
         model: Qwen/Qwen3-Embedding-8B
         dimension: ${rag.default.dimension}
-        priority: 1
+        priority: 2
       - id: qwen-emb-local
         provider: ollama
         model: qwen3-embedding:8b-fp16
         dimension: ${rag.default.dimension}
-        priority: 2
+        priority: 3
 
   rerank:
     default-model: qwen3-rerank
